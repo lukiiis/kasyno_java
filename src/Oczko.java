@@ -1,113 +1,64 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Oczko extends Uzytkownik implements Gra
-{
+public class Oczko extends Gra {
     ArrayList<Karta> Krupier;
     int PunktyNaRenceKrupiera;
-    int zaklad;
-
-    public Oczko() {
-        Krupier = new ArrayList<Karta>();
-        SumaKrupiera = 0;
-        this.talia = new TaliaKart();
-        PunktyUzytkownika.Wartosc = 1000;
-        PunktyNaRenceKrupiera = 0;
-        zaklad = 0;
-    }
 
     int SumaKrupiera = 0;
-    TaliaKart talia;
 
-    private int Zaklad()
-    {
-        while(true)
-        {
-            System.out.println("Liczba posiadanych punktow: " + this.PunktyUzytkownika.getWartosc());
-            System.out.println("Postaw zaklad: ");
-            Scanner scanner = new Scanner(System.in);
-            int suma = scanner.nextInt();
-            if(suma > PunktyUzytkownika.Wartosc)
-            {
-                System.out.println("Nie masz tyle punktow");
-            }
-            else if(suma < 20){
-                System.out.println("Za mala kwota (min 20)");
-            }
-            else {
-                return suma;
-            }
-        }
+    public Oczko() {
+        super();
+        Krupier = new ArrayList<Karta>();
+        SumaKrupiera = 0;
+
+        PunktyNaRenceKrupiera = 0;
+        zaklad = 0;
 
     }
 
-    private boolean SprawdzCzyKoniec()
-    {
-        if(PunktyNaRenceKrupiera > 21)
-        {
+    private boolean SprawdzCzyKoniec() {
+        if (PunktyNaRenceKrupiera > 21) {
             System.out.println("Wygrales!");
-            PunktyUzytkownika.Wartosc += zaklad;
+            gracz.PunktyUzytkownika.Wartosc += zaklad;
             return true;
         }
 
-        if(PunktyNaRenceKrupiera == 21 && PunktyNaReceUzytkownika == 21 ||
-            PunktyNaRenceKrupiera == 20 && PunktyNaReceUzytkownika == 20
-        )
-        {
+        if (PunktyNaRenceKrupiera == 21 && gracz.PunktyNaReceUzytkownika == 21 ||
+                PunktyNaRenceKrupiera == 20 && gracz.PunktyNaReceUzytkownika == 20) {
             System.out.println("Remis!");
             return true;
         }
 
-        if(PunktyNaReceUzytkownika > 21)
-        {
+        if (gracz.PunktyNaReceUzytkownika > 21) {
             System.out.println("Przegrales!");
-            PunktyUzytkownika.Wartosc -= zaklad;
-            return  true;
+            gracz.PunktyUzytkownika.Wartosc -= zaklad;
+            return true;
         }
-        if(PunktyNaReceUzytkownika == 22 && KartyUzytkownika.toArray().length == 2)
-        {
+        if (gracz.PunktyNaReceUzytkownika == 22 && gracz.KartyUzytkownika.toArray().length == 2) {
             System.out.println("Wygrales perskie oczko WOW!");
-            PunktyUzytkownika.Wartosc += zaklad;
-            return  true;
+            gracz.PunktyUzytkownika.Wartosc += zaklad;
+            return true;
         }
-        if(PunktyNaRenceKrupiera == 22 && Krupier.toArray().length == 2)
-        {
+        if (PunktyNaRenceKrupiera == 22 && Krupier.toArray().length == 2) {
             System.out.println("Krupier trafil perskie oczko WOW!");
-            PunktyUzytkownika.Wartosc -= zaklad;
-            return  false;
+            gracz.PunktyUzytkownika.Wartosc -= zaklad;
+            return false;
         }
-
 
         return false;
     }
 
-
-
-    private boolean CzyDobrac()
-    {
-        Scanner scaner = new Scanner(System.in);
-        System.out.println("Czy dobrac karty? 1 - tak, 0 - nie");
-        int decyzja = scaner.nextInt();
-
-        if(decyzja == 1)
-            return true;
-        else
-            return false;
-    }
-
     public void RozpocznijGre() {
 
-        StworzUzytkownika();
+        gracz.StworzUzytkownika();
         talia.UtworzTalie();
 
-
-        while(PunktyUzytkownika.Wartosc > 0)
-        {
-            KartyUzytkownika.clear();
+        while (gracz.PunktyUzytkownika.Wartosc > 0) {
+            gracz.KartyUzytkownika.clear();
             Krupier.clear();
 
-
-            PunktyNaReceUzytkownika = 0;
+            gracz.PunktyNaReceUzytkownika = 0;
             PunktyNaRenceKrupiera = 0;
             boolean koniecRundyUzytkownika = false;
             boolean koniecRundyKrupiera = false;
@@ -115,109 +66,90 @@ public class Oczko extends Uzytkownik implements Gra
             DobierzPoDwieKarty();
             WyswietlKarty();
 
-
-            if(SprawdzCzyKoniec())
+            if (SprawdzCzyKoniec())
                 continue;
 
-            while(!koniecRundyUzytkownika)
-            {
-                if(CzyDobrac()){
-                    KartyUzytkownika.add(talia.DobierzKarte());
+            while (!koniecRundyUzytkownika) {
+                if (CzyDobrac()) {
+                    gracz.KartyUzytkownika.add(talia.DobierzKarte());
                     LiczRence();
                     WyswietlKarty();
-                }
-                else{
+                } else {
                     koniecRundyUzytkownika = true;
                 }
 
-                if(SprawdzCzyKoniec()){
+                if (SprawdzCzyKoniec()) {
                     koniecRundyUzytkownika = true;
                     koniecRundyKrupiera = true;
                 }
 
             }
 
-            while(!koniecRundyKrupiera)
-            {
-                if(PunktyNaRenceKrupiera <= PunktyNaReceUzytkownika){
+            while (!koniecRundyKrupiera) {
+                if (PunktyNaRenceKrupiera <= gracz.PunktyNaReceUzytkownika) {
                     Krupier.add(talia.DobierzKarte());
                     LiczRence();
                     WyswietlKarty();
                 }
-                if(SprawdzCzyKoniec())
+                if (SprawdzCzyKoniec())
                     koniecRundyKrupiera = true;
 
-                if(PunktyNaRenceKrupiera > PunktyNaReceUzytkownika
-                    && koniecRundyKrupiera == false)
-                {
+                if (PunktyNaRenceKrupiera > gracz.PunktyNaReceUzytkownika
+                        && koniecRundyKrupiera == false) {
                     System.out.println("Przegrales!");
-                    PunktyUzytkownika.Wartosc -= zaklad;
+                    gracz.PunktyUzytkownika.Wartosc -= zaklad;
                     koniecRundyKrupiera = true;
                 }
 
             }
 
-
             talia.ResetujTalie();
-            for(int clear = 0; clear < 5; clear++)
-            {
-                System.out.println("\b") ;
+            for (int clear = 0; clear < 5; clear++) {
+                System.out.println("\b");
             }
         }
     }
 
-    public void ZakonczGre() {
-        System.out.println("KONIEC GRY");
-    }
-
-    private void WyswietlKarty()
-    {
+    private void WyswietlKarty() {
         System.out.println("Karty krupiera: ");
-        for(var n : Krupier)
-        {
+        for (var n : Krupier) {
             System.out.print(n.wyswietl() + " " + n.Kolor + " ");
         }
         System.out.println();
         System.out.println("Suma kart krupiera: ");
         System.out.println(PunktyNaRenceKrupiera);
 
-
         System.out.print("Karty uztykownika: ");
 
-
-        for(var n : KartyUzytkownika)
-        {
+        for (var n : gracz.KartyUzytkownika) {
             System.out.print(n.wyswietl() + " " + n.Kolor + " ");
         }
 
         System.out.println();
         System.out.println("Suma kart uzytkownika: ");
-        System.out.println(PunktyNaReceUzytkownika);
+        System.out.println(gracz.PunktyNaReceUzytkownika);
 
         System.out.println();
     }
-    private void DobierzPoDwieKarty()
-    {
+
+    private void DobierzPoDwieKarty() {
         System.out.println("Dobranie kart: ");
         Krupier.add(talia.DobierzKarte());
         Krupier.add(talia.DobierzKarte());
 
-        KartyUzytkownika.add(talia.DobierzKarte());
-        KartyUzytkownika.add(talia.DobierzKarte());
+        gracz.KartyUzytkownika.add(talia.DobierzKarte());
+        gracz.KartyUzytkownika.add(talia.DobierzKarte());
 
         LiczRence();
     }
 
-    private void LiczRence()
-    {
+    private void LiczRence() {
         PunktyNaRenceKrupiera = 0;
-        PunktyNaReceUzytkownika = 0;
-        for(var n : KartyUzytkownika)
-        {
-            PunktyNaReceUzytkownika += n.Wartosc;
+        gracz.PunktyNaReceUzytkownika = 0;
+        for (var n : gracz.KartyUzytkownika) {
+            gracz.PunktyNaReceUzytkownika += n.Wartosc;
         }
-        for(var n : Krupier)
-        {
+        for (var n : Krupier) {
             PunktyNaRenceKrupiera += n.Wartosc;
         }
     }
