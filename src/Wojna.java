@@ -5,13 +5,14 @@ public class Wojna extends Gra{
     Karta kartaKrupiera;
     boolean postawienie;
 
-    public Wojna() {
-        super();
+    public Wojna(Uzytkownik gracz) {
+        super(gracz);
     }
 
     @Override
     public void RozpocznijGre() {
-        gracz.StworzUzytkownika();
+        super.RozpocznijGre();
+
         talia.UtworzTalieWojna();
 
         while(gracz.PunktyUzytkownika.Wartosc > 0)
@@ -21,21 +22,23 @@ public class Wojna extends Gra{
             kartaKrupiera = talia.DobierzKarte();
             WyswietlKarty();
             zaklad = Zaklad();
+            if(zaklad == -1)
+                break;
             gracz.KartyUzytkownika.add(talia.DobierzKarte());
             WyswietlKarty();
             ZnajdzZwyciesce();
-            for(int clear = 0; clear < 5; clear++)
-            {
-                System.out.println("\b") ;
-            }
+            CzyscEkran();
 
 
         }
+        ZakonczGre();
     }
 
     @Override
     protected int Zaklad() {
         int tempZaklad = super.Zaklad();
+        if(tempZaklad == -1)
+            return -1;
         System.out.println("1. Postaw na krupiera \t2. Postaw na siebie");
         Scanner scanner = new Scanner(System.in);
         var result = scanner.nextInt();
@@ -47,6 +50,7 @@ public class Wojna extends Gra{
             System.out.println("Postawiono na krupiera");
             postawienie = false;
         }
+
         return tempZaklad;
     }
 

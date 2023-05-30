@@ -12,6 +12,7 @@ public class Uzytkownik {
         PunktyUzytkownika = new Punkty(0);
         KartyUzytkownika = new ArrayList<Karta>();
         PunktyNaReceUzytkownika = 0;
+        PunktyUzytkownika.Wartosc = 1000;
     }
 
     public String getImie() {

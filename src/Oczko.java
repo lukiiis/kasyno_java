@@ -7,14 +7,11 @@ public class Oczko extends Gra {
 
     int SumaKrupiera = 0;
 
-    public Oczko() {
-        super();
+    public Oczko(Uzytkownik gracz) {
+        super(gracz);
         Krupier = new ArrayList<Karta>();
         SumaKrupiera = 0;
-
         PunktyNaRenceKrupiera = 0;
-        zaklad = 0;
-
     }
 
     private boolean SprawdzCzyKoniec() {
@@ -51,7 +48,6 @@ public class Oczko extends Gra {
 
     public void RozpocznijGre() {
 
-        gracz.StworzUzytkownika();
         talia.UtworzTalie();
 
         while (gracz.PunktyUzytkownika.Wartosc > 0) {
@@ -63,6 +59,9 @@ public class Oczko extends Gra {
             boolean koniecRundyUzytkownika = false;
             boolean koniecRundyKrupiera = false;
             zaklad = Zaklad();
+            if(zaklad == -1)
+                break;
+
             DobierzPoDwieKarty();
             WyswietlKarty();
 
@@ -104,10 +103,9 @@ public class Oczko extends Gra {
             }
 
             talia.ResetujTalie();
-            for (int clear = 0; clear < 5; clear++) {
-                System.out.println("\b");
-            }
+            CzyscEkran();
         }
+        ZakonczGre();
     }
 
     private void WyswietlKarty() {
